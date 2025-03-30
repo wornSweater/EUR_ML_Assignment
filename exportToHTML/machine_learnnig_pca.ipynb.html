@@ -1,0 +1,559 @@
+<html>
+<head>
+<title>machine_learnnig_pca.ipynb</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d4d4d4;}
+.s1 { color: #cd9069;}
+.s2 { color: #47a2ed;}
+.s3 { color: #d7ba7d;}
+.s4 { color: #b4cda8;}
+</style>
+</head>
+<body bgcolor="#1e1e1e">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+machine_learnnig_pca.ipynb</font>
+</center></td></tr></table>
+<pre><span class="s0">{</span>
+ <span class="s1">&quot;cells&quot;</span><span class="s0">: [</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;initial_id&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;collapsed&quot;</span><span class="s0">: </span><span class="s2">true</span><span class="s0">,</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.462277Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.387139Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;import pandas as pd</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;import numpy as np</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;# read the files</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;df = pd.read_excel('Copy of split_datasets(1).xlsx')&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">77</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.478235Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.464274Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# set X and y as the train and target</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;y_orgi = df['default']</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_orgi = df.drop(columns=['default'], axis=1)&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;6f0da6b0eca2e73c&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">78</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.494226Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.480228Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# set seed</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;seed = 42&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;c42433e92cb1de42&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">79</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.509159Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.496214Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# split the training data into training and validation</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;from sklearn.model_selection import train_test_split</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train, X_test, y_train, y_test = train_test_split(X_orgi, y_orgi, test_size=0.3, random_state=seed)&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;c018749dd9b997e&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">80</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.525113Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.511145Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;X_train_continuous = X_train[['age', 'log_income', 'log_debtinc', 'log_creddebt', 'log_othdebt']]</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train_discrete = X_train[['ed', 'address']]</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_test_continuous = X_test[['age', 'log_income', 'log_debtinc', 'log_creddebt', 'log_othdebt']]</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_test_discrete = X_test[['ed', 'address']]&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;c5327c8775a0792a&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">81</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.541071Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.527103Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# preform standardization on continuous features</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;from sklearn.preprocessing import StandardScaler</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;scaler_train = StandardScaler()</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;scalar_test = StandardScaler()</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train_continuous_st = scaler_train.fit_transform(X_train_continuous)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_test_continuous_st = scalar_test.fit_transform(X_test_continuous)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train_continuous_st&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;54c9c71d98633af1&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;data&quot;</span><span class="s0">: {</span>
+      <span class="s1">&quot;text/plain&quot;</span><span class="s0">: [</span>
+       <span class="s1">&quot;array([[-0.91474096,  0.93666804,  1.08548917,  2.22427816,  1.19586455],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+       <span class="s1">&quot;       [-0.91474096, -0.04234708, -0.31445499, -0.13769812, -0.44120649],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+       <span class="s1">&quot;       [-0.51052257, -0.10053665,  1.71081204,  0.19487173,  1.81827724],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+       <span class="s1">&quot;       ...,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+       <span class="s1">&quot;       [ 0.56739313,  1.16918876,  0.73534529,  2.38824784,  0.66729171],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+       <span class="s1">&quot;       [-0.51052257, -1.26868561,  0.40118701, -1.008998  , -0.19771036],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+       <span class="s1">&quot;       [-0.10630419, -0.35178907,  0.77943902,  0.36746568,  0.35065293]])&quot;</span>
+      <span class="s0">]</span>
+     <span class="s0">},</span>
+     <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">82</span><span class="s0">,</span>
+     <span class="s1">&quot;metadata&quot;</span><span class="s0">: {},</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;execute_result&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">82</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.557023Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.544058Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# perform PCA on the train set, and make test set align with them</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;from sklearn.decomposition import PCA</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train_continuous_st_copy = X_train_continuous_st.copy()</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;pca = PCA(n_components=2)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train_continuous_st_copy_pca = pca.fit_transform(X_train_continuous_st_copy)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_test_continuous_st_copy = X_test_continuous_st.copy()</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;pca = PCA(n_components=2)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_test_continuous_st_copy_pca = pca.fit_transform(X_test_continuous_st_copy)</span><span class="s3">\n</span><span class="s1">&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;508f88e484967c45&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">83</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.572981Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.560016Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# combine the data together</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_train = np.hstack((X_train_discrete, X_train_continuous_st_copy_pca))</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X_test = np.hstack((X_test_discrete, X_test_continuous_st_copy_pca))&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;7604a45623205dec&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">84</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.619960Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.610880Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;from sklearn.linear_model import SGDClassifier</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;from sklearn.svm import LinearSVC</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;from sklearn.ensemble import RandomForestClassifier</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;from sklearn.model_selection import GridSearchCV&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;1c477378b1d0c09c&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">85</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.651384Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.634433Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# set the training data</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;X = X_train</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;y = y_train&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;73336041b4da54a7&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">86</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.014507Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:43.665347Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# logistic regression</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;parameters = {</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'penalty': ['l1', 'l2', 'elasticnet'],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'alpha': [0.001, 0.01, 0.1],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'learning_rate': ['constant', 'optimal', 'adaptive', 'invscaling'],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'eta0': [0.001, 0.01, 0.1],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;}</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model = SGDClassifier(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    loss='log_loss',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    class_weight='balanced',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    random_state=seed,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;cv = GridSearchCV(model, parameters, n_jobs=-1, cv=5, scoring={'F1': 'f1', 'Acc': 'accuracy'}, refit='F1')</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;cv.fit(X, y)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The best F1 score: {cv.best_score_}, the std: {cv.cv_results_['std_test_F1'][cv.best_index_]}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The corresponding acc score: {cv.cv_results_['mean_test_Acc'][cv.best_index_]}, the std: {cv.cv_results_['std_test_Acc'][cv.best_index_]}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The best estimator params: {cv.best_params_}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;e71e9a66be2bc35b&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;stdout&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;stream&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;text&quot;</span><span class="s0">: [</span>
+      <span class="s1">&quot;The best F1 score: 0.5315554958988561, the std: 0.061370197198731234</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The corresponding acc score: 0.7305658381808566, the std: 0.07711830977587317</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The best estimator params: {'alpha': 0.01, 'eta0': 0.01, 'learning_rate': 'constant', 'penalty': 'elasticnet'}</span><span class="s3">\n</span><span class="s1">&quot;</span>
+     <span class="s0">]</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">87</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.030467Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.016502Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;model = SGDClassifier(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    loss='log_loss',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    class_weight='balanced',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    random_state=seed,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    alpha=0.1,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    eta0=0.01,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    penalty=</span><span class="s3">\&quot;</span><span class="s1">l2</span><span class="s3">\&quot;</span><span class="s1">,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    learning_rate='adaptive',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model.fit(X, y)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model.score(X_test, y_test)&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;3899fa71409fa117&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;data&quot;</span><span class="s0">: {</span>
+      <span class="s1">&quot;text/plain&quot;</span><span class="s0">: [</span>
+       <span class="s1">&quot;0.44360902255639095&quot;</span>
+      <span class="s0">]</span>
+     <span class="s0">},</span>
+     <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">88</span><span class="s0">,</span>
+     <span class="s1">&quot;metadata&quot;</span><span class="s0">: {},</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;execute_result&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">88</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.250677Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.032458Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# linear SVC</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;parameters = {</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'penalty': ['l1', 'l2'],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'loss': ['hinge', 'squared_hinge'],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    'C': [0.001, 0.01, 0.1, 1],</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;}</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model = LinearSVC(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    class_weight='balanced',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    random_state=seed,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;cv = GridSearchCV(model, parameters, n_jobs=-1, cv=5, scoring={'Acc': 'accuracy', 'F1': 'f1'}, refit='Acc')</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;cv.fit(X, y)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The best F1 score: {cv.best_score_}, the std: {cv.cv_results_['std_test_F1'][cv.best_index_]}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The corresponding acc score: {cv.cv_results_['mean_test_Acc'][cv.best_index_]}, the std: {cv.cv_results_['std_test_Acc'][cv.best_index_]}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The best estimator params: {cv.best_params_}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The acc of test set (final prediction) is {cv.score(X_test, y_test)}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;8ea4384111bec3cc&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;stdout&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;stream&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;text&quot;</span><span class="s0">: [</span>
+      <span class="s1">&quot;The best F1 score: 0.7594923320994182, the std: 0.1555689088943435</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The corresponding acc score: 0.7594923320994182, the std: 0.07320464426310051</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The best estimator params: {'C': 0.001, 'loss': 'hinge', 'penalty': 'l2'}</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The acc of test set (final prediction) is 0.6165413533834586</span><span class="s3">\n</span><span class="s1">&quot;</span>
+     <span class="s0">]</span>
+    <span class="s0">},</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;stderr&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;stream&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;text&quot;</span><span class="s0">: [</span>
+      <span class="s1">&quot;C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">model_selection</span><span class="s3">\\</span><span class="s1">_validation.py:425: FitFailedWarning: </span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;40 fits failed out of a total of 80.</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The score on these train-test partitions for these parameters will be set to nan.</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;If these failures are not expected, you can try to debug them by setting error_score='raise'.</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;Below are more details about the failures:</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;--------------------------------------------------------------------------------</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;20 fits failed with the following error:</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;Traceback (most recent call last):</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">model_selection</span><span class="s3">\\</span><span class="s1">_validation.py</span><span class="s3">\&quot;</span><span class="s1">, line 729, in _fit_and_score</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    estimator.fit(X_train, y_train, **fit_params)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">base.py</span><span class="s3">\&quot;</span><span class="s1">, line 1152, in wrapper</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    return fit_method(estimator, *args, **kwargs)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_classes.py</span><span class="s3">\&quot;</span><span class="s1">, line 326, in fit</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    self.coef_, self.intercept_, n_iter_ = _fit_liblinear(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_base.py</span><span class="s3">\&quot;</span><span class="s1">, line 1229, in _fit_liblinear</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    solver_type = _get_liblinear_solver_type(multi_class, penalty, loss, dual)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_base.py</span><span class="s3">\&quot;</span><span class="s1">, line 1060, in _get_liblinear_solver_type</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    raise ValueError(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;ValueError: Unsupported set of arguments: The combination of penalty='l1' and loss='hinge' is not supported, Parameters: penalty='l1', loss='hinge', dual=True</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;--------------------------------------------------------------------------------</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;20 fits failed with the following error:</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;Traceback (most recent call last):</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">model_selection</span><span class="s3">\\</span><span class="s1">_validation.py</span><span class="s3">\&quot;</span><span class="s1">, line 729, in _fit_and_score</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    estimator.fit(X_train, y_train, **fit_params)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">base.py</span><span class="s3">\&quot;</span><span class="s1">, line 1152, in wrapper</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    return fit_method(estimator, *args, **kwargs)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_classes.py</span><span class="s3">\&quot;</span><span class="s1">, line 326, in fit</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    self.coef_, self.intercept_, n_iter_ = _fit_liblinear(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_base.py</span><span class="s3">\&quot;</span><span class="s1">, line 1229, in _fit_liblinear</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    solver_type = _get_liblinear_solver_type(multi_class, penalty, loss, dual)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  File </span><span class="s3">\&quot;</span><span class="s1">C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_base.py</span><span class="s3">\&quot;</span><span class="s1">, line 1060, in _get_liblinear_solver_type</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;    raise ValueError(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;ValueError: Unsupported set of arguments: The combination of penalty='l1' and loss='squared_hinge' are not supported when dual=True, Parameters: penalty='l1', loss='squared_hinge', dual=True</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  warnings.warn(some_fits_failed_message, FitFailedWarning)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">model_selection</span><span class="s3">\\</span><span class="s1">_search.py:979: UserWarning: One or more of the test scores are non-finite: [       nan 0.75949233        nan 0.6882073         nan 0.67858276</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;        nan 0.65584347        nan 0.67202538        nan 0.64933897</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;        nan 0.62659968        nan 0.63950291]</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  warnings.warn(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">model_selection</span><span class="s3">\\</span><span class="s1">_search.py:979: UserWarning: One or more of the test scores are non-finite: [       nan 0.47600603        nan 0.50909656        nan 0.51493284</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;        nan 0.49395277        nan 0.50653999        nan 0.48993786</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;        nan 0.47851135        nan 0.48292869]</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  warnings.warn(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_classes.py:32: FutureWarning: The default value of `dual` will change from `True` to `'auto'` in 1.5. Set the value of `dual` explicitly to suppress the warning.</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  warnings.warn(</span><span class="s3">\n</span><span class="s1">&quot;</span>
+     <span class="s0">]</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">89</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.281627Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.252671Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;model = LinearSVC(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    random_state=seed,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    C=0.1,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    loss=</span><span class="s3">\&quot;</span><span class="s1">hinge</span><span class="s3">\&quot;</span><span class="s1">,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model.fit(X, y)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model.score(X_test, y_test)&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;599e312e683039c&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;stderr&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;stream&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;text&quot;</span><span class="s0">: [</span>
+      <span class="s1">&quot;C:</span><span class="s3">\\</span><span class="s1">Users</span><span class="s3">\\</span><span class="s1">55479</span><span class="s3">\\</span><span class="s1">PycharmProjects</span><span class="s3">\\</span><span class="s1">EUR_QF_ML_1</span><span class="s3">\\</span><span class="s1">venv</span><span class="s3">\\</span><span class="s1">lib</span><span class="s3">\\</span><span class="s1">site-packages</span><span class="s3">\\</span><span class="s1">sklearn</span><span class="s3">\\</span><span class="s1">svm</span><span class="s3">\\</span><span class="s1">_classes.py:32: FutureWarning: The default value of `dual` will change from `True` to `'auto'` in 1.5. Set the value of `dual` explicitly to suppress the warning.</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;  warnings.warn(</span><span class="s3">\n</span><span class="s1">&quot;</span>
+     <span class="s0">]</span>
+    <span class="s0">},</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;data&quot;</span><span class="s0">: {</span>
+      <span class="s1">&quot;text/plain&quot;</span><span class="s0">: [</span>
+       <span class="s1">&quot;0.7443609022556391&quot;</span>
+      <span class="s0">]</span>
+     <span class="s0">},</span>
+     <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">90</span><span class="s0">,</span>
+     <span class="s1">&quot;metadata&quot;</span><span class="s0">: {},</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;execute_result&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">90</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:46.208287Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:45.282592Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;# random forest</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;parameters = {</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;}</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model = RandomForestClassifier(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    bootstrap=True,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    criterion='entropy',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    n_estimators=100,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    class_weight='balanced',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    random_state=seed,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;cv = GridSearchCV(model, parameters, n_jobs=-1, cv=10, scoring={'F1': 'f1', 'Acc': 'accuracy'}, refit='F1')</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;cv.fit(X, y)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The best F1 score: {cv.best_score_}, the std: {cv.cv_results_['std_test_F1'][cv.best_index_]}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The corresponding acc score: {cv.cv_results_['mean_test_Acc'][cv.best_index_]}, the std: {cv.cv_results_['std_test_Acc'][cv.best_index_]}</span><span class="s3">\&quot;</span><span class="s1">)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;print(f</span><span class="s3">\&quot;</span><span class="s1">The best estimator params: {cv.best_params_}</span><span class="s3">\&quot;</span><span class="s1">)&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;54e125cdb8a1f27e&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;stdout&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;stream&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;text&quot;</span><span class="s0">: [</span>
+      <span class="s1">&quot;The best F1 score: 0.49804195804195805, the std: 0.1581039129995314</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The corresponding acc score: 0.7990322580645162, the std: 0.05292780703509474</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+      <span class="s1">&quot;The best estimator params: {}</span><span class="s3">\n</span><span class="s1">&quot;</span>
+     <span class="s0">]</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">91</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:46.412980Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:46.209627Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: [</span>
+    <span class="s1">&quot;model = RandomForestClassifier(</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    bootstrap=True,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    criterion='entropy',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    n_estimators=100,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    class_weight='balanced',</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;    random_state=seed,</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model.fit(X, y)</span><span class="s3">\n</span><span class="s1">&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;model.score(X_test, y_test)&quot;</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;8efd6b4ef7f2fc41&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [</span>
+    <span class="s0">{</span>
+     <span class="s1">&quot;data&quot;</span><span class="s0">: {</span>
+      <span class="s1">&quot;text/plain&quot;</span><span class="s0">: [</span>
+       <span class="s1">&quot;0.6917293233082706&quot;</span>
+      <span class="s0">]</span>
+     <span class="s0">},</span>
+     <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">92</span><span class="s0">,</span>
+     <span class="s1">&quot;metadata&quot;</span><span class="s0">: {},</span>
+     <span class="s1">&quot;output_type&quot;</span><span class="s0">: </span><span class="s1">&quot;execute_result&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">92</span>
+  <span class="s0">},</span>
+  <span class="s0">{</span>
+   <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;ExecuteTime&quot;</span><span class="s0">: {</span>
+     <span class="s1">&quot;end_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:46.428937Z&quot;</span><span class="s0">,</span>
+     <span class="s1">&quot;start_time&quot;</span><span class="s0">: </span><span class="s1">&quot;2025-02-21T15:46:46.414976Z&quot;</span>
+    <span class="s0">}</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;cell_type&quot;</span><span class="s0">: </span><span class="s1">&quot;code&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;source&quot;</span><span class="s0">: </span><span class="s1">&quot;&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;id&quot;</span><span class="s0">: </span><span class="s1">&quot;a8c1f19dfabd6c0&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;outputs&quot;</span><span class="s0">: [],</span>
+   <span class="s1">&quot;execution_count&quot;</span><span class="s0">: </span><span class="s4">92</span>
+  <span class="s0">}</span>
+ <span class="s0">],</span>
+ <span class="s1">&quot;metadata&quot;</span><span class="s0">: {</span>
+  <span class="s1">&quot;kernelspec&quot;</span><span class="s0">: {</span>
+   <span class="s1">&quot;display_name&quot;</span><span class="s0">: </span><span class="s1">&quot;Python 3&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;language&quot;</span><span class="s0">: </span><span class="s1">&quot;python&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;python3&quot;</span>
+  <span class="s0">},</span>
+  <span class="s1">&quot;language_info&quot;</span><span class="s0">: {</span>
+   <span class="s1">&quot;codemirror_mode&quot;</span><span class="s0">: {</span>
+    <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;ipython&quot;</span><span class="s0">,</span>
+    <span class="s1">&quot;version&quot;</span><span class="s0">: </span><span class="s4">2</span>
+   <span class="s0">},</span>
+   <span class="s1">&quot;file_extension&quot;</span><span class="s0">: </span><span class="s1">&quot;.py&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;mimetype&quot;</span><span class="s0">: </span><span class="s1">&quot;text/x-python&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;name&quot;</span><span class="s0">: </span><span class="s1">&quot;python&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;nbconvert_exporter&quot;</span><span class="s0">: </span><span class="s1">&quot;python&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;pygments_lexer&quot;</span><span class="s0">: </span><span class="s1">&quot;ipython2&quot;</span><span class="s0">,</span>
+   <span class="s1">&quot;version&quot;</span><span class="s0">: </span><span class="s1">&quot;2.7.6&quot;</span>
+  <span class="s0">}</span>
+ <span class="s0">},</span>
+ <span class="s1">&quot;nbformat&quot;</span><span class="s0">: </span><span class="s4">4</span><span class="s0">,</span>
+ <span class="s1">&quot;nbformat_minor&quot;</span><span class="s0">: </span><span class="s4">5</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>
